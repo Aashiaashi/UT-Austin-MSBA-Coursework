@@ -1,0 +1,79 @@
+### Chapter-2 | Question 10
+########### Question 2a ########
+#Loading ISLR2 Library
+
+library(ISLR2)
+attach(Boston)
+View(Boston)
+dim(Boston)
+names(Boston)
+
+#There are  506 rows in the Boston data set and 13 columns. 
+<!-- crim per capita crime rate by town.
+   a) zn proportion of residential land zoned for lots over 25,000 sq.ft. 
+   b) indus proportion of non-retail business acres per town. 
+   c) chas Charles River dummy variable (= 1 if tract bounds river; 0 otherwise). 
+   d) nox nitrogen oxides concentration (parts per 10 million). 
+   e) age proportion of owner-occupied units built prior to 1940. 
+   f) dis weighted mean of distances to five Boston employment centres.
+   g) rad index of accessibility to radial highways. 
+   h) tax full-value property-tax rate per $10,000. 
+   i) ptratio pupil-teacher ratio by town. 
+   j) lstat lower status of the population (percent). 
+   k) medv median value of owner-occupied homes in $1000s.
+   
+-->
+
+Boston<-na.omit(Boston)
+
+########### Question 2b ########
+library(ggplot2)
+library(GGally)
+ggpairs(Boston)
+
+<!-- Seeing only a set of columns against each other -->
+pairs(~crim+age+dis+tax+medv+indus, data=Boston,
+   main = "Scatterplot Matrix")
+
+#From the graphs we can not find a relationship between different variables 
+##########Question 2c######
+library(leaps)
+Best_Subset <-
+    regsubsets(crim~.,
+               data =Boston,
+               nbest = 2,      # 1 best model for each number of predictors
+               nvmax = NULL,    # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
+Best_Subset
+
+########Quetsion 2d####
+
+########Quetsion 2e####
+sum(Boston$chas ==1)
+
+########Quetsion 2f####
+median(ptratio)
+
+
+#######Question 2g#####
+#To get the summary of all coloumns'
+summary(Boston)
+Boston[Boston$medv == min(Boston$medv), ]
+
+#######Question 2h#######
+
+#Number of records with average number of rooms per dwelling >7
+
+sum(Boston$rm >7)
+
+#Number of records with average number of rooms per dwelling >8
+
+Boston_less_8<-Boston[Boston$rm > 8, ]
+nrow(Boston_less_8)
+
+prop.table(table(Boston_less_8$chas))
+
+summary(Boston)
+sapply(Boston_less_8, mean)
+

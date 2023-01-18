@@ -1,0 +1,75 @@
+import math
+
+def moving_window(text):   
+    myString = ""
+    for elem in text:
+        #print(elem)
+        myString = "".join([myString, str(elem)]) #string the characters from the list and join it into myString
+        
+    Splitted=myString.split(" ") #Split the myString by blank space
+
+    mydict={}
+    mylist=[]
+
+    for i in range (len(Splitted)):
+        if i+3<=len(Splitted):
+            #print(i)
+            in_list=(Splitted[i]+" "+Splitted[i+1]+" "+Splitted[i+2]) #maybe think of another way
+            
+            
+            mylist.append(in_list)
+            i=i+1
+
+    Dictionary={}
+    for x in mylist:
+        key=str(x)
+        #print(key)
+        Dictionary.update({key:1})
+        
+    return (list(Dictionary.keys()))
+
+def cosine(Dic1,Dic2):
+    
+    x=0
+    count=0
+    #print(Dic1,Dic2)
+    for i in Dic1:
+       
+        #print(i,x,Dic1[i])
+        while  x<len(Dic2):
+            #print(test,x,i,Dic2[x],count)
+            if i==Dic2[x]:
+                count=count+1
+                #print(x,i,count)
+                x=x+1
+        
+            else:
+                x=x+1
+        x=0
+        
+    return float(count/(math.sqrt(len(Dic1)*len(Dic2)))) 
+
+fp=open("Santa.txt", 'r',encoding="utf-8")
+text = fp.readline().rstrip() 
+checklist=[]
+
+while text!="":
+    #print(moving_window(text))
+    checklist.append(moving_window(text)) #Every tweet will become a list. THere will be 5 checklists.
+    #print(checklist)
+    text= fp.readline().rstrip() 
+#print(checklist)
+
+#input_1=int(input("Which line of Tweet do you wish to compare: "))
+#input_2=int(input("The other line of Tweet you wish to compare is: "))
+#print(cosine(checklist[input_1],checklist[input_2]))
+
+
+for k in range (0,len(checklist)): 
+    
+    for h in range (0,len(checklist)):
+        if cosine(checklist[k],checklist[h])>0.5 and k!=h:
+            #print(k,h)
+            nearD=cosine(checklist[k],checklist[h])
+            print("Tweet no.",k,"and tweet no.",h,"have near duplicates of ",format(nearD,".2f"))
+    h=0
